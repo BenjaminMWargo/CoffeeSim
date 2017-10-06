@@ -1,5 +1,5 @@
 ﻿namespace CoffeeSim {
-	partial class Form1 {
+	partial class MenuController {
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
