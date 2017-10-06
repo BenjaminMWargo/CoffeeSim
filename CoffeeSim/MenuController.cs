@@ -18,13 +18,13 @@ namespace CoffeeSim
 		}
 
         // For when the Menu UI is loaded
-		private void MenuController_Load(object sender, EventArgs e)
-		{
-			this.Text = "Coffee Shop";
+        private void MenuController_Load_1(object sender, EventArgs e)
+        {
+            this.Text = "Coffee Shop";
 
-			Controls.Add(GetCoffeesDropBox());
-			Controls.Add(GetToppingsList());
-		}
+            Controls.Add(GetCoffeesDropBox());
+            Controls.Add(GetToppingsList());
+        }
 
 		// A drop down menu for selecting the desired coffee
 		private ComboBox GetCoffeesDropBox()
@@ -57,5 +57,7 @@ namespace CoffeeSim
 
 			return toppingsListBox;
 		}
+
+        
 	}
 }
