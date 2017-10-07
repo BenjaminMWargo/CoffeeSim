@@ -20,91 +20,62 @@ namespace CoffeeSim
         // For when the Menu UI is loaded
         private void MenuController_Load(object sender, EventArgs e)
         {
-            this.Text = "Coffee Shop";
-            this.Size = new System.Drawing.Size(400, 400);
-
-            // Add the various components to the form
-            Controls.Add(GetCoffeesDropBox());
-            Controls.Add(GetLogInPanel());
-            Controls.Add(GetToppingsList());
-            Controls.Add(GetCheckoutPanel());
+            // Get the dynamic information for the various components of the form
+            GetListOfCoffees();
+            GetListOfToppings();
         }
 
-        #region Control Builders
-
-        // A panel and log in button for accessing the manager interface
-        private Panel GetLogInPanel()
-        {
-            Panel logInPanel = new Panel();
-            Button logInButton = new Button();
-
-            // Log-in button properties
-            logInButton.Text = "LOGIN";
-            logInButton.BackColor = Color.Blue;
-            logInButton.ForeColor = Color.White;
-            logInButton.Click += new EventHandler(this.GetManagerLogIn_OnClick);
-
-            // Log-in panel properties
-            logInPanel.Location = new System.Drawing.Point(315, 5);
-            logInPanel.Anchor = AnchorStyles.Right | AnchorStyles.Top;
-            logInPanel.AutoSize = true;
-            logInPanel.Controls.Add(logInButton);
-
-            return logInPanel;
-        }
+        #region Dynamic Info Getters
 
         // A drop down menu for selecting the desired coffee
-        private ComboBox GetCoffeesDropBox()
+        private void GetListOfCoffees()
         {
-            List<string> coffees = new List<string>();  // Will instead call ReadData from CoffeesFileManager
-            ComboBox coffeesDropBox = new ComboBox();
-            coffeesDropBox.DataSource = coffees;
+            List<string> coffeesList = new List<string>();  // Will instead call ReadData from CoffeesFileManager
 
             // Just for testing without coffee file manager
-            coffees.Add("- Select a coffee - ");
-            coffees.Add("Regular $2.50");
-            coffees.Add("Decaf $3.00");
-            coffees.Add("House Blend $3.25");
+            coffeesList.Add(CoffeesDropBox.Text);
+            coffeesList.Add("Regular $2.50");
+            coffeesList.Add("Decaf $3.00");
+            coffeesList.Add("House Blend $3.25");
 
-            coffeesDropBox.Location = new System.Drawing.Point(5, 5);   // Drop box goes in the upper left corner
-
-            return coffeesDropBox;
+            CoffeesDropBox.DataSource = coffeesList;
         }
 
         // A list of toppings for the user to choose from
-        private ListBox GetToppingsList()
+        private void GetListOfToppings()
         {
             List<string> toppingsList = new List<string>(); // Will instead call ReadData from ToppingsFileManager
-            ListBox toppingsListBox = new ListBox();
 
             // Just for testing without toppings file manager
             toppingsList.Add("Mocha");
             toppingsList.Add("Whip");
             toppingsList.Add("Milk");
 
-            // 
-            toppingsListBox.Location = new System.Drawing.Point(30, 30);
-            toppingsListBox.Size = new System.Drawing.Size(245, 200);
-            toppingsListBox.DataSource = toppingsList;
-
-            return toppingsListBox;
+            // Toppings list properties
+            ToppingsListBox.DataSource = toppingsList;
         }
-
-		private Control GetCheckoutPanel()
-		{
-            Panel checkoutPanel = new Panel();
-
-            return checkoutPanel;
-		}
 
         #endregion
 
         #region EventHandlers
 
-        // This method calls the manager log in form to get manager credentials
-        private void GetManagerLogIn_OnClick(Object sender, EventArgs e)
+        private void LogInButton_Click(object sender, EventArgs e)
         {
             Console.WriteLine("Manager wants to log in");
+        }
+
+        private void CoffeesDropBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("You selected {0}", CoffeesDropBox.SelectedItem.ToString());
+
+            if (CoffeesDropBox.SelectedItem.ToString() != "- Select a coffee -")
+            {
+                DynamicTotalLabel.Text = "$100.00";
+            }
+            else
+            {
+                DynamicTotalLabel.Text = "$0.00";
+            }
         }
 
         #endregion
