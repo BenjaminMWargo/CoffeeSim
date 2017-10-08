@@ -12,8 +12,11 @@ namespace CoffeeSim
 {
     public partial class MenuController : Form
     {
+        private bool ViewFullyLoaded;
+
         public MenuController()
         {
+            ViewFullyLoaded = false;
             InitializeComponent();
         }
 
@@ -23,6 +26,8 @@ namespace CoffeeSim
             // Get the dynamic information for the various components of the form
             GetListOfCoffees();
             GetListOfToppings();
+
+            ViewFullyLoaded = true;
         }
 
         #region Dynamic Info Getters
@@ -47,9 +52,9 @@ namespace CoffeeSim
             List<string> toppingsList = new List<string>(); // Will instead call ReadData from ToppingsFileManager
 
             // Just for testing without toppings file manager
-            toppingsList.Add("Mocha");
-            toppingsList.Add("Whip");
-            toppingsList.Add("Milk");
+            toppingsList.Add("Mocha $0.89");
+            toppingsList.Add("Whip $0.49");
+            toppingsList.Add("Milk $.99");
 
             // Toppings list properties
             ToppingsListBox.DataSource = toppingsList;
@@ -68,16 +73,30 @@ namespace CoffeeSim
         {
             Console.WriteLine("You selected {0}", CoffeesDropBox.SelectedItem.ToString());
 
-            if (CoffeesDropBox.SelectedItem.ToString() != "- Select a coffee -")
+            if (ViewFullyLoaded)
             {
-                DynamicTotalLabel.Text = "$100.00";
-            }
-            else
-            {
-                DynamicTotalLabel.Text = "$0.00";
+                if (OrderListBox.Items.Count > 0)    // If the orders list has a previous coffee selected, remove it
+                {
+                    OrderListBox.Items.RemoveAt(0);
+                }
+
+                OrderListBox.Items.Insert(0, CoffeesDropBox.SelectedItem);  // Add the selected coffee to the orders list
             }
         }
 
         #endregion
+
+        private void ToppingsListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("You selected {0}", ToppingsListBox.SelectedItem.ToString());
+
+            if (ViewFullyLoaded)
+            {
+                if (CoffeesDropBox.SelectedItem.ToString() == "- Select a coffee -")
+                {
+                    MessageBox.Show("Please choose a coffee before you select a topping");
+                }
+            }
+        }
     }
 }

@@ -28,6 +28,7 @@
             this.ToppingsListBox = new System.Windows.Forms.ListBox();
             this.CheckoutButton = new System.Windows.Forms.Button();
             this.DynamicTotalLabel = new System.Windows.Forms.Label();
+            this.OrderListBox = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
             // LogInButton
@@ -62,9 +63,11 @@
             this.ToppingsListBox.Name = "ToppingsListBox";
             this.ToppingsListBox.Size = new System.Drawing.Size(217, 284);
             this.ToppingsListBox.TabIndex = 2;
+            this.ToppingsListBox.SelectedIndexChanged += new System.EventHandler(this.ToppingsListBox_SelectedIndexChanged);
             // 
             // CheckoutButton
             // 
+            this.CheckoutButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.CheckoutButton.BackColor = System.Drawing.Color.Blue;
             this.CheckoutButton.ForeColor = System.Drawing.Color.White;
             this.CheckoutButton.Location = new System.Drawing.Point(327, 387);
@@ -76,6 +79,7 @@
             // 
             // DynamicTotalLabel
             // 
+            this.DynamicTotalLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.DynamicTotalLabel.AutoSize = true;
             this.DynamicTotalLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.DynamicTotalLabel.Location = new System.Drawing.Point(233, 395);
@@ -84,12 +88,23 @@
             this.DynamicTotalLabel.TabIndex = 4;
             this.DynamicTotalLabel.Text = "$0.00";
             // 
+            // OrderListBox
+            // 
+            this.OrderListBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.OrderListBox.FormattingEnabled = true;
+            this.OrderListBox.ItemHeight = 20;
+            this.OrderListBox.Location = new System.Drawing.Point(4, 77);
+            this.OrderListBox.Name = "OrderListBox";
+            this.OrderListBox.Size = new System.Drawing.Size(209, 284);
+            this.OrderListBox.TabIndex = 5;
+            // 
             // MenuController
             // 
             this.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(478, 444);
+            this.Controls.Add(this.OrderListBox);
             this.Controls.Add(this.DynamicTotalLabel);
             this.Controls.Add(this.CheckoutButton);
             this.Controls.Add(this.ToppingsListBox);
@@ -112,6 +127,7 @@
         private System.Windows.Forms.ListBox ToppingsListBox;
         private System.Windows.Forms.Button CheckoutButton;
         private System.Windows.Forms.Label DynamicTotalLabel;
+        private System.Windows.Forms.ListBox OrderListBox;
     }
 }
 
