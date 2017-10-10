@@ -12,6 +12,9 @@ namespace CoffeeSim
 {
     public partial class MenuController : Form
     {
+		public ManagerLoginForm frmLogin;
+		public ManagerControlForm frmControl;
+
         public MenuController()
         {
             InitializeComponent();
@@ -61,7 +64,14 @@ namespace CoffeeSim
 
         private void LogInButton_Click(object sender, EventArgs e)
         {
-            Console.WriteLine("Manager wants to log in");
+			//open manager login form
+			if (frmLogin == null && frmControl == null) {
+				frmLogin = new ManagerLoginForm(this);
+				frmLogin.Show();
+				Console.WriteLine("Manager wants to log in");
+			} else {
+				Console.WriteLine("Login Screen is open");
+			}
         }
 
         private void CoffeesDropBox_SelectedIndexChanged(object sender, EventArgs e)

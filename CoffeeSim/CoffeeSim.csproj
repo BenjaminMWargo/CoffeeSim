@@ -46,6 +46,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ManagerControlForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ManagerControlForm.Designer.cs">
+      <DependentUpon>ManagerControlForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ManagerLoginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ManagerLoginForm.Designer.cs">
+      <DependentUpon>ManagerLoginForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="MenuController.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -54,6 +66,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="ManagerControlForm.resx">
+      <DependentUpon>ManagerControlForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManagerLoginForm.resx">
+      <DependentUpon>ManagerLoginForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MenuController.resx">
       <DependentUpon>MenuController.cs</DependentUpon>
     </EmbeddedResource>
