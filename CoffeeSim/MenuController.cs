@@ -13,6 +13,9 @@ namespace CoffeeSim
 {
     public partial class MenuController : Form
     {
+        private CoffeeModel coffeeOrdered;
+        private List<CoffeeModel> coffeesList;
+        private List<ToppingModel> toppingList;
         private bool ViewFullyLoaded;
 
         public MenuController()
@@ -36,7 +39,7 @@ namespace CoffeeSim
         // A drop down menu for selecting the desired coffee
         private void GetListOfCoffees()
         {
-            List<CoffeeModel> coffeesList = new List<CoffeeModel>();  // Will instead call ReadData from CoffeesFileManager
+            coffeesList = new List<CoffeeModel>();  // Will instead call ReadData from CoffeesFileManager
             List<string> coffeesListDisplay = new List<string>();
             coffeesListDisplay.Add("- Select a coffee -");
 
@@ -57,7 +60,7 @@ namespace CoffeeSim
         private void GetListOfToppings()
         {
             List<string> toppingListDisplay = new List<string>();
-            List<ToppingModel> toppingList = new List<ToppingModel>(); // Will instead call ReadData from ToppingsFileManager
+            toppingList = new List<ToppingModel>(); // Will instead call ReadData from ToppingsFileManager
 
             // Just for testing without toppings file manager
             toppingList.Add(new ToppingModel("Mocha", Decimal.Parse("0.50")));
@@ -72,7 +75,7 @@ namespace CoffeeSim
 
 
             // Toppings list properties
-            ToppingsListBox.DataSource = toppingList;
+            ToppingsListBox.DataSource = toppingListDisplay;
         }
 
         #endregion
@@ -86,14 +89,34 @@ namespace CoffeeSim
 
         private void CoffeesDropBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Console.WriteLine("You selected {0}", CoffeesDropBox.SelectedItem.ToString());
+            List<ToppingModel> temp = null;
 
-            if (OrderListBox.Items.Count > 0)    // If the orders list has a previous coffee selected, remove it
+            if (coffeeOrdered != null)
             {
+                temp = coffeeOrdered.Toppings;
+                coffeeOrdered.Toppings = null;
+
                 OrderListBox.Items.RemoveAt(0);
             }
 
-            OrderListBox.Items.Insert(0, CoffeesDropBox.SelectedItem);  // Add the selected coffee to the orders list
+            if (CoffeesDropBox.SelectedIndex == 0)
+            {
+                OrderListBox.Items.Clear();
+                coffeeOrdered = null;
+            }
+            else
+            {
+                Console.WriteLine("Hello");
+                Console.WriteLine("You selected {0}", CoffeesDropBox.SelectedItem.ToString());
+
+                OrderListBox.Items.Insert(0, CoffeesDropBox.SelectedItem);  // Add the selected coffee to the orders list
+
+                coffeeOrdered = coffeesList[CoffeesDropBox.SelectedIndex - 1];
+                coffeeOrdered.Toppings = temp;
+            }
+
+            DynamicTotalLabel.Text = "$100.00";
+            DynamicTotalLabel.Text = getTotal().ToString("C");
         }
 
         #endregion
@@ -104,14 +127,27 @@ namespace CoffeeSim
 
             if (ViewFullyLoaded)
             {
-                if (CoffeesDropBox.SelectedItem.ToString() == "- Select a coffee -")
+                if (CoffeesDropBox.SelectedIndex == 0)
                 {
                     MessageBox.Show("Please choose a coffee before you select a topping");
+                    return;
                 }
-                else
+
+                if (coffeeOrdered.Toppings == null)
                 {
-                    OrderListBox.Items.Add(ToppingsListBox.SelectedItem.ToString());
+                    coffeeOrdered.Toppings = new List<ToppingModel>();
                 }
+
+                coffeeOrdered.Toppings.Add(toppingList[ToppingsListBox.SelectedIndex]);
+
+                foreach (ToppingModel topping in coffeeOrdered.Toppings)
+                {
+                    Console.WriteLine(topping.Name);
+                }
+
+                OrderListBox.Items.Add(ToppingsListBox.SelectedItem.ToString());
+
+                DynamicTotalLabel.Text = getTotal().ToString("C");
             }
         }
 
@@ -119,5 +155,26 @@ namespace CoffeeSim
         {
 
         }
+
+        private Decimal getTotal()
+        {
+            if (coffeeOrdered == null)
+            {
+                return Decimal.Parse("0.00");
+            }
+                
+            Decimal total = coffeeOrdered.Price;
+
+            if (coffeeOrdered.Toppings != null)
+            {
+                foreach (ToppingModel topping in coffeeOrdered.Toppings)
+                {
+                    total += topping.Price;
+                }
+            }
+                
+            return total;
+        }
+
     }
 }
