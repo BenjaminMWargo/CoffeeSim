@@ -178,7 +178,16 @@ namespace CoffeeSim
 
         private void OrderListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            if (OrderListBox.SelectedIndex == 0) // Selection is coffee
+            {
+                OrderListBox.Items.Clear();
+                coffeeOrdered = null;
+            }
+            else // Selection is topping
+            {
+                coffeeOrdered.Toppings.RemoveAt(OrderListBox.SelectedIndex - 1);
+            }
+            DynamicTotalLabel.Text = getTotal().ToString("C");
         }
 
     }
