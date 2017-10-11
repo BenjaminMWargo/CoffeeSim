@@ -73,15 +73,12 @@ namespace CoffeeSim
         {
             Console.WriteLine("You selected {0}", CoffeesDropBox.SelectedItem.ToString());
 
-            if (ViewFullyLoaded)
+            if (OrderListBox.Items.Count > 0)    // If the orders list has a previous coffee selected, remove it
             {
-                if (OrderListBox.Items.Count > 0)    // If the orders list has a previous coffee selected, remove it
-                {
-                    OrderListBox.Items.RemoveAt(0);
-                }
-
-                OrderListBox.Items.Insert(0, CoffeesDropBox.SelectedItem);  // Add the selected coffee to the orders list
+                OrderListBox.Items.RemoveAt(0);
             }
+
+            OrderListBox.Items.Insert(0, CoffeesDropBox.SelectedItem);  // Add the selected coffee to the orders list
         }
 
         #endregion
@@ -95,6 +92,10 @@ namespace CoffeeSim
                 if (CoffeesDropBox.SelectedItem.ToString() == "- Select a coffee -")
                 {
                     MessageBox.Show("Please choose a coffee before you select a topping");
+                }
+                else
+                {
+                    OrderListBox.Items.Add(ToppingsListBox.SelectedItem.ToString());
                 }
             }
         }
