@@ -153,7 +153,7 @@ namespace CoffeeSim
 
         private void CheckoutButton_Click(object sender, EventArgs e)
         {
-
+            Console.WriteLine("Console Checkout");
         }
 
         private Decimal getTotal()
@@ -174,6 +174,11 @@ namespace CoffeeSim
             }
                 
             return total;
+        }
+
+        private void OrderListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
 
     }

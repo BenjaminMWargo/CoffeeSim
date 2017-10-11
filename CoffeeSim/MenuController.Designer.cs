@@ -37,7 +37,7 @@
             this.LogInButton.BackColor = System.Drawing.Color.Blue;
             this.LogInButton.ForeColor = System.Drawing.Color.White;
             this.LogInButton.Location = new System.Drawing.Point(218, 8);
-            this.LogInButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.LogInButton.Margin = new System.Windows.Forms.Padding(2);
             this.LogInButton.Name = "LogInButton";
             this.LogInButton.Size = new System.Drawing.Size(93, 22);
             this.LogInButton.TabIndex = 0;
@@ -49,7 +49,7 @@
             // 
             this.CoffeesDropBox.FormattingEnabled = true;
             this.CoffeesDropBox.Location = new System.Drawing.Point(3, 12);
-            this.CoffeesDropBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.CoffeesDropBox.Margin = new System.Windows.Forms.Padding(2);
             this.CoffeesDropBox.Name = "CoffeesDropBox";
             this.CoffeesDropBox.Size = new System.Drawing.Size(117, 21);
             this.CoffeesDropBox.TabIndex = 1;
@@ -61,7 +61,7 @@
             this.ToppingsListBox.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.ToppingsListBox.FormattingEnabled = true;
             this.ToppingsListBox.Location = new System.Drawing.Point(166, 49);
-            this.ToppingsListBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ToppingsListBox.Margin = new System.Windows.Forms.Padding(2);
             this.ToppingsListBox.Name = "ToppingsListBox";
             this.ToppingsListBox.Size = new System.Drawing.Size(146, 186);
             this.ToppingsListBox.TabIndex = 2;
@@ -73,7 +73,7 @@
             this.CheckoutButton.BackColor = System.Drawing.Color.Blue;
             this.CheckoutButton.ForeColor = System.Drawing.Color.White;
             this.CheckoutButton.Location = new System.Drawing.Point(218, 252);
-            this.CheckoutButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.CheckoutButton.Margin = new System.Windows.Forms.Padding(2);
             this.CheckoutButton.Name = "CheckoutButton";
             this.CheckoutButton.Size = new System.Drawing.Size(93, 29);
             this.CheckoutButton.TabIndex = 3;
@@ -98,10 +98,11 @@
             this.OrderListBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.OrderListBox.FormattingEnabled = true;
             this.OrderListBox.Location = new System.Drawing.Point(3, 50);
-            this.OrderListBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.OrderListBox.Margin = new System.Windows.Forms.Padding(2);
             this.OrderListBox.Name = "OrderListBox";
             this.OrderListBox.Size = new System.Drawing.Size(141, 186);
             this.OrderListBox.TabIndex = 5;
+            this.OrderListBox.SelectedIndexChanged += new System.EventHandler(this.OrderListBox_SelectedIndexChanged);
             // 
             // MenuController
             // 
