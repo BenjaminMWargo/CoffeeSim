@@ -178,15 +178,26 @@ namespace CoffeeSim
 
         private void OrderListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (OrderListBox.SelectedIndex == 0) // Selection is coffee
+            if(OrderListBox.SelectedItem == null)
+            {
+                return;
+            }
+
+            int selectedIndex = OrderListBox.SelectedIndex;
+
+            if (selectedIndex == 0) // Selection is coffee
             {
                 OrderListBox.Items.Clear();
                 coffeeOrdered = null;
             }
             else // Selection is topping
             {
-                coffeeOrdered.Toppings.RemoveAt(OrderListBox.SelectedIndex - 1);
+                Console.WriteLine("Here");
+                OrderListBox.SelectedItem = null;    // HACKY WAY OF INTERRUPTING RECURSIVE FIRES OF SELECTED INDEX CHANGE
+                OrderListBox.Items.RemoveAt(selectedIndex);
+                coffeeOrdered.Toppings.RemoveAt(selectedIndex - 1);
             }
+
             DynamicTotalLabel.Text = getTotal().ToString("C");
         }
 
