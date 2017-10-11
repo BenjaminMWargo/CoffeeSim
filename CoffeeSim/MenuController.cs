@@ -56,15 +56,23 @@ namespace CoffeeSim
         // A list of toppings for the user to choose from
         private void GetListOfToppings()
         {
-            List<string> toppingsList = new List<string>(); // Will instead call ReadData from ToppingsFileManager
+            List<string> toppingListDisplay = new List<string>();
+            List<ToppingModel> toppingList = new List<ToppingModel>(); // Will instead call ReadData from ToppingsFileManager
 
             // Just for testing without toppings file manager
-            toppingsList.Add("Mocha $0.89");
-            toppingsList.Add("Whip $0.49");
-            toppingsList.Add("Milk $.99");
+            toppingList.Add(new ToppingModel("Mocha", Decimal.Parse("0.50")));
+            toppingList.Add(new ToppingModel("Milk", Decimal.Parse("0.70")));
+            toppingList.Add(new ToppingModel("Water", Decimal.Parse("0.00")));
+
+
+            for (int i = 0; i < toppingList.Count; i++)
+            {
+                toppingListDisplay.Add(toppingList[i].Name + " - " + toppingList[i].Price);
+            }
+
 
             // Toppings list properties
-            ToppingsListBox.DataSource = toppingsList;
+            ToppingsListBox.DataSource = toppingList;
         }
 
         #endregion
@@ -105,6 +113,11 @@ namespace CoffeeSim
                     OrderListBox.Items.Add(ToppingsListBox.SelectedItem.ToString());
                 }
             }
+        }
+
+        private void CheckoutButton_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
