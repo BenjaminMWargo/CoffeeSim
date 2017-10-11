@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace CoffeeSim.IOModels
 {
-    public class ToppingModel
+    public class ToppingModel : BeverageModel
     {
-        public string Name { get; set; }
-        public Decimal Price { get; set; }
+        public ToppingModel(string name, Decimal price) : base(name, price)
+        {
+        }
     }
 }
