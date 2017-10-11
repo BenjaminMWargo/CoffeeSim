@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CoffeeSim.IOModels;
 
 namespace CoffeeSim 
 {
@@ -35,15 +36,21 @@ namespace CoffeeSim
         // A drop down menu for selecting the desired coffee
         private void GetListOfCoffees()
         {
-            List<string> coffeesList = new List<string>();  // Will instead call ReadData from CoffeesFileManager
+            List<CoffeeModel> coffeesList = new List<CoffeeModel>();  // Will instead call ReadData from CoffeesFileManager
+            List<string> coffeesListDisplay = new List<string>();
+            coffeesListDisplay.Add("- Select a coffee -");
 
             // Just for testing without coffee file manager
-            coffeesList.Add(CoffeesDropBox.Text);
-            coffeesList.Add("Regular $2.50");
-            coffeesList.Add("Decaf $3.00");
-            coffeesList.Add("House Blend $3.25");
+            coffeesList.Add(new CoffeeModel("Regular", Decimal.Parse("2.50")));
+            coffeesList.Add(new CoffeeModel("Decaf", Decimal.Parse("3.00")));
+            coffeesList.Add(new CoffeeModel("House Blend", Decimal.Parse("3.25")));
 
-            CoffeesDropBox.DataSource = coffeesList;
+            for (int i = 0; i < coffeesList.Count; i++)
+            {
+                coffeesListDisplay.Add(coffeesList[i].Name + " - " + coffeesList[i].Price);
+            }
+
+            CoffeesDropBox.DataSource = coffeesListDisplay;
         }
 
         // A list of toppings for the user to choose from
