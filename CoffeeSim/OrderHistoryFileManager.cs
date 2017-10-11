@@ -29,7 +29,8 @@ namespace CoffeeSim
         {
             if(orderHistory == null)
             {
-                return new OrderHistoryFileManager(pathName);
+                orderHistory = new OrderHistoryFileManager(pathName);
+                return orderHistory;
             }
             else
             {
