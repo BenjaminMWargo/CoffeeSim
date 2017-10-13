@@ -127,7 +127,7 @@ namespace CoffeeSim
 
             if (ViewFullyLoaded)
             {
-                if (CoffeesDropBox.SelectedIndex == 0)
+                if (coffeeOrdered == null)
                 {
                     MessageBox.Show("Please choose a coffee before you select a topping");
                     return;
@@ -154,6 +154,8 @@ namespace CoffeeSim
         private void CheckoutButton_Click(object sender, EventArgs e)
         {
             Console.WriteLine("Console Checkout");
+
+
         }
 
         private Decimal getTotal()
