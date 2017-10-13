@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -58,12 +62,18 @@
     <Compile Include="ManagerLoginForm.Designer.cs">
       <DependentUpon>ManagerLoginForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="BaseFileManager.cs" />
+    <Compile Include="IOModels\BeverageModel.cs" />
     <Compile Include="MenuController.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MenuController.Designer.cs">
       <DependentUpon>MenuController.cs</DependentUpon>
     </Compile>
+    <Compile Include="IOModels\CoffeeModel.cs" />
+    <Compile Include="OrderHistoryFileManager.cs" />
+    <Compile Include="IOModels\OrderModel.cs" />
+    <Compile Include="IOModels\ToppingModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="ManagerControlForm.resx">
@@ -85,6 +95,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

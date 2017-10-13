@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CoffeeSim.IOModels;
 
 namespace CoffeeSim 
 {
@@ -15,8 +16,14 @@ namespace CoffeeSim
 		public ManagerLoginForm frmLogin;
 		public ManagerControlForm frmControl;
 
+        private CoffeeModel coffeeOrdered;
+        private List<CoffeeModel> coffeesList;
+        private List<ToppingModel> toppingList;
+        private bool ViewFullyLoaded;
+
         public MenuController()
         {
+            ViewFullyLoaded = false;
             InitializeComponent();
         }
 
@@ -26,6 +33,8 @@ namespace CoffeeSim
             // Get the dynamic information for the various components of the form
             GetListOfCoffees();
             GetListOfToppings();
+
+            ViewFullyLoaded = true;
         }
 
         #region Dynamic Info Getters
@@ -33,29 +42,43 @@ namespace CoffeeSim
         // A drop down menu for selecting the desired coffee
         private void GetListOfCoffees()
         {
-            List<string> coffeesList = new List<string>();  // Will instead call ReadData from CoffeesFileManager
+            coffeesList = new List<CoffeeModel>();  // Will instead call ReadData from CoffeesFileManager
+            List<string> coffeesListDisplay = new List<string>();
+            coffeesListDisplay.Add("- Select a coffee -");
 
             // Just for testing without coffee file manager
-            coffeesList.Add(CoffeesDropBox.Text);
-            coffeesList.Add("Regular $2.50");
-            coffeesList.Add("Decaf $3.00");
-            coffeesList.Add("House Blend $3.25");
+            coffeesList.Add(new CoffeeModel("Regular", Decimal.Parse("2.50")));
+            coffeesList.Add(new CoffeeModel("Decaf", Decimal.Parse("3.00")));
+            coffeesList.Add(new CoffeeModel("House Blend", Decimal.Parse("3.25")));
 
-            CoffeesDropBox.DataSource = coffeesList;
+            for (int i = 0; i < coffeesList.Count; i++)
+            {
+                coffeesListDisplay.Add(coffeesList[i].Name + " - " + coffeesList[i].Price);
+            }
+
+            CoffeesDropBox.DataSource = coffeesListDisplay;
         }
 
         // A list of toppings for the user to choose from
         private void GetListOfToppings()
         {
-            List<string> toppingsList = new List<string>(); // Will instead call ReadData from ToppingsFileManager
+            List<string> toppingListDisplay = new List<string>();
+            toppingList = new List<ToppingModel>(); // Will instead call ReadData from ToppingsFileManager
 
             // Just for testing without toppings file manager
-            toppingsList.Add("Mocha");
-            toppingsList.Add("Whip");
-            toppingsList.Add("Milk");
+            toppingList.Add(new ToppingModel("Mocha", Decimal.Parse("0.50")));
+            toppingList.Add(new ToppingModel("Milk", Decimal.Parse("0.70")));
+            toppingList.Add(new ToppingModel("Water", Decimal.Parse("0.00")));
+
+
+            for (int i = 0; i < toppingList.Count; i++)
+            {
+                toppingListDisplay.Add(toppingList[i].Name + " - " + toppingList[i].Price);
+            }
+
 
             // Toppings list properties
-            ToppingsListBox.DataSource = toppingsList;
+            ToppingsListBox.DataSource = toppingListDisplay;
         }
 
         #endregion
@@ -76,18 +99,117 @@ namespace CoffeeSim
 
         private void CoffeesDropBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Console.WriteLine("You selected {0}", CoffeesDropBox.SelectedItem.ToString());
+            List<ToppingModel> temp = null;
 
-            if (CoffeesDropBox.SelectedItem.ToString() != "- Select a coffee -")
+            if (coffeeOrdered != null)
             {
-                DynamicTotalLabel.Text = "$100.00";
+                temp = coffeeOrdered.Toppings;
+                coffeeOrdered.Toppings = null;
+
+                OrderListBox.Items.RemoveAt(0);
+            }
+
+            if (CoffeesDropBox.SelectedIndex == 0)
+            {
+                OrderListBox.Items.Clear();
+                coffeeOrdered = null;
             }
             else
             {
-                DynamicTotalLabel.Text = "$0.00";
+                Console.WriteLine("Hello");
+                Console.WriteLine("You selected {0}", CoffeesDropBox.SelectedItem.ToString());
+
+                OrderListBox.Items.Insert(0, CoffeesDropBox.SelectedItem);  // Add the selected coffee to the orders list
+
+                coffeeOrdered = coffeesList[CoffeesDropBox.SelectedIndex - 1];
+                coffeeOrdered.Toppings = temp;
             }
+
+            DynamicTotalLabel.Text = "$100.00";
+            DynamicTotalLabel.Text = getTotal().ToString("C");
         }
 
         #endregion
+
+        private void ToppingsListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("You selected {0}", ToppingsListBox.SelectedItem.ToString());
+
+            if (ViewFullyLoaded)
+            {
+                if (CoffeesDropBox.SelectedIndex == 0)
+                {
+                    MessageBox.Show("Please choose a coffee before you select a topping");
+                    return;
+                }
+
+                if (coffeeOrdered.Toppings == null)
+                {
+                    coffeeOrdered.Toppings = new List<ToppingModel>();
+                }
+
+                coffeeOrdered.Toppings.Add(toppingList[ToppingsListBox.SelectedIndex]);
+
+                foreach (ToppingModel topping in coffeeOrdered.Toppings)
+                {
+                    Console.WriteLine(topping.Name);
+                }
+
+                OrderListBox.Items.Add(ToppingsListBox.SelectedItem.ToString());
+
+                DynamicTotalLabel.Text = getTotal().ToString("C");
+            }
+        }
+
+        private void CheckoutButton_Click(object sender, EventArgs e)
+        {
+            Console.WriteLine("Console Checkout");
+        }
+
+        private Decimal getTotal()
+        {
+            if (coffeeOrdered == null)
+            {
+                return Decimal.Parse("0.00");
+            }
+                
+            Decimal total = coffeeOrdered.Price;
+
+            if (coffeeOrdered.Toppings != null)
+            {
+                foreach (ToppingModel topping in coffeeOrdered.Toppings)
+                {
+                    total += topping.Price;
+                }
+            }
+                
+            return total;
+        }
+
+        private void OrderListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(OrderListBox.SelectedItem == null)
+            {
+                return;
+            }
+
+            int selectedIndex = OrderListBox.SelectedIndex;
+
+            if (selectedIndex == 0) // Selection is coffee
+            {
+                OrderListBox.Items.Clear();
+                coffeeOrdered = null;
+            }
+            else // Selection is topping
+            {
+                Console.WriteLine("Here");
+                OrderListBox.SelectedItem = null;    // HACKY WAY OF INTERRUPTING RECURSIVE FIRES OF SELECTED INDEX CHANGE
+                OrderListBox.Items.RemoveAt(selectedIndex);
+                coffeeOrdered.Toppings.RemoveAt(selectedIndex - 1);
+            }
+
+            DynamicTotalLabel.Text = getTotal().ToString("C");
+        }
+
     }
 }
