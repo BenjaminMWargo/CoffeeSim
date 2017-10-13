@@ -157,28 +157,17 @@ namespace CoffeeSim
         private void CheckoutButton_Click(object sender, EventArgs e)
         {
             Console.WriteLine("Console Checkout");
-
-            //string pricelabel = DynamicTotalLabel.Text.Remove(DynamicTotalLabel.Text.IndexOf('$'));
-            //try
-            //{
-                if (coffeeOrdered != null)
+                
+            if (coffeeOrdered != null)
+            {
+                ohfm.AddOrder(new IOModels.OrderModel
                 {
-                    ohfm.AddOrder(new IOModels.OrderModel
-                    {
-                        Coffee = coffeeOrdered,
-                        Price = getTotal(),
-                        Date = DateTime.Now,
-                        CustomerName = "Dude"
-                    });
-                }
-            //}
-            //catch (Exception ex)
-            //{
-            //    var i = 0;
-            //}
-            bool writeSuccess = ohfm.WriteReport("report.txt");
-
-
+                    Coffee = coffeeOrdered,
+                    Price = getTotal(),
+                    Date = DateTime.Now,
+                    CustomerName = "Dude"
+                });
+            }
         }
 
         private Decimal getTotal()
