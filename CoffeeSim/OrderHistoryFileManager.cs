@@ -13,8 +13,8 @@ namespace CoffeeSim
     public class OrderHistoryFileManager
     {
         private static OrderHistoryFileManager orderHistory;
-
-
+        private static OrderFileModel OrderFile;
+        private static string OrderFilePath;
 
         private OrderHistoryFileManager(string pathName)
         {
@@ -30,6 +30,7 @@ namespace CoffeeSim
             if(orderHistory == null)
             {
                 orderHistory = new OrderHistoryFileManager(pathName);
+                OrderFilePath = pathName;
                 return orderHistory;
             }
             else
@@ -39,7 +40,7 @@ namespace CoffeeSim
         }
 
 
-        public static void WriteFile(string filePath, OrderFileModel orderFile)
+        private static void WriteFile(string filePath, OrderFileModel orderFile)
         {
             if (!File.Exists(filePath))
             {
@@ -55,7 +56,7 @@ namespace CoffeeSim
             }
         }
 
-        public static OrderFileModel ReadFile(string filePath)
+        private static OrderFileModel ReadFile(string filePath)
         {
             //check to see if the file is here
             if (!File.Exists(filePath))
@@ -72,6 +73,62 @@ namespace CoffeeSim
                 OrderFileModel orderFile = JsonConvert.DeserializeObject<OrderFileModel>(fileContents);
 
                 return orderFile;
+            }
+        }
+
+        public static void AddOrder(OrderModel order)
+        {
+            //add to memory list
+            OrderFile.Orders.Add(order);
+
+            //write that out
+            WriteFile(OrderFilePath, OrderFile);
+        }
+
+        public static bool WriteReport(string pathName)
+        {
+            using (StreamWriter sw = new StreamWriter(pathName, false))
+            {
+                //constitute line by line
+                foreach(var order in OrderFile.Orders)
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append(order.Date.ToString("mm/dd/yyyy"));
+                    sb.Append(" ");
+
+                    sb.Append(order.Price.ToString("C"));
+                    sb.Append(" ");
+
+                    sb.Append(order.CustomerName);
+                    sb.Append(" ");
+
+                    sb.Append(order.Coffee.Name);
+                    sb.Append("[");
+                    sb.Append(order.Coffee.Price.ToString("C"));
+                    sb.Append("]");
+                    sb.Append(" ");
+
+                    foreach(var topping in order.Coffee.Toppings)
+                    {
+                        sb.Append(topping.Name);
+                        sb.Append("[");
+                        sb.Append(topping.Price.ToString("C"));
+                        sb.Append("]");
+                        sb.Append(" ");
+                    }
+
+                    string reportLine = sb.ToString();
+                    sw.WriteLine(reportLine);
+                }
+            }
+
+            if (File.Exists(pathName))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 

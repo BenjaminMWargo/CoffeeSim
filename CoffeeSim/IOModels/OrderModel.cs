@@ -12,7 +12,6 @@ namespace CoffeeSim.IOModels
         public string CustomerName { get; set; }
         public Decimal Price { get; set; }
         public CoffeeModel Coffee { get; set; }
-        public List<ToppingModel> Toppings { get; set; }
     }
 
     public class OrderFileModel

@@ -18,10 +18,14 @@ namespace CoffeeSim
         private List<ToppingModel> toppingList;
         private bool ViewFullyLoaded;
 
-        public MenuController()
+        //OrderHistory
+        private static OrderHistoryFileManager ohfm;
+
+        public MenuController(OrderHistoryFileManager pOHFM)
         {
             ViewFullyLoaded = false;
             InitializeComponent();
+            ohfm = pOHFM;
         }
 
         // For when the Menu UI is loaded
