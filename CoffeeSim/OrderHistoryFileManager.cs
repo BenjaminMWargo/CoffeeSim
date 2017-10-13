@@ -22,6 +22,17 @@ namespace CoffeeSim
             if (!File.Exists(pathName))
             {
                 File.Create(pathName); //this doesn't actually do anything...
+                OrderFile = ReadFile(pathName);
+            }
+            else{
+                OrderFile = ReadFile(pathName);
+            }
+
+            if (OrderFile == null){
+                OrderFile = new OrderFileModel
+                {
+                    Orders = new List<OrderModel>()
+                };
             }
         }
 
@@ -40,7 +51,7 @@ namespace CoffeeSim
         }
 
 
-        private static void WriteFile(string filePath, OrderFileModel orderFile)
+        private void WriteFile(string filePath, OrderFileModel orderFile)
         {
             if (!File.Exists(filePath))
             {
@@ -56,7 +67,7 @@ namespace CoffeeSim
             }
         }
 
-        private static OrderFileModel ReadFile(string filePath)
+        private OrderFileModel ReadFile(string filePath)
         {
             //check to see if the file is here
             if (!File.Exists(filePath))
@@ -76,7 +87,7 @@ namespace CoffeeSim
             }
         }
 
-        public static void AddOrder(OrderModel order)
+        public void AddOrder(OrderModel order)
         {
             //add to memory list
             OrderFile.Orders.Add(order);
@@ -85,7 +96,7 @@ namespace CoffeeSim
             WriteFile(OrderFilePath, OrderFile);
         }
 
-        public static bool WriteReport(string pathName)
+        public bool WriteReport(string pathName)
         {
             using (StreamWriter sw = new StreamWriter(pathName, false))
             {
@@ -108,19 +119,29 @@ namespace CoffeeSim
                     sb.Append("]");
                     sb.Append(" ");
 
-                    foreach(var topping in order.Coffee.Toppings)
-                    {
-                        sb.Append(topping.Name);
-                        sb.Append("[");
-                        sb.Append(topping.Price.ToString("C"));
-                        sb.Append("]");
-                        sb.Append(" ");
+
+                    //Todo: Fix case where toppings can be stored as null (should be stored as an empty list) Check JsonConvert [could be culprit]
+                    if (order.Coffee.Toppings != null){
+                        foreach (var topping in order.Coffee.Toppings)
+                        {
+                            sb.Append(topping.Name);
+                            sb.Append("[");
+                            sb.Append(topping.Price.ToString("C"));
+                            sb.Append("]");
+                            sb.Append(" ");
+                        }                       
                     }
+                    else{
+                        sb.Append("no toppings/null toppings");
+                    }
+
 
                     string reportLine = sb.ToString();
                     sw.WriteLine(reportLine);
                 }
             }
+
+            Console.WriteLine("hoy");
 
             if (File.Exists(pathName))
             {

@@ -19,7 +19,7 @@ namespace CoffeeSim
         private bool ViewFullyLoaded;
 
         //OrderHistory
-        private static OrderHistoryFileManager ohfm;
+        private OrderHistoryFileManager ohfm;
 
         public MenuController(OrderHistoryFileManager pOHFM)
         {
@@ -119,7 +119,6 @@ namespace CoffeeSim
                 coffeeOrdered.Toppings = temp;
             }
 
-            DynamicTotalLabel.Text = "$100.00";
             DynamicTotalLabel.Text = getTotal().ToString("C");
         }
 
@@ -158,6 +157,26 @@ namespace CoffeeSim
         private void CheckoutButton_Click(object sender, EventArgs e)
         {
             Console.WriteLine("Console Checkout");
+
+            //string pricelabel = DynamicTotalLabel.Text.Remove(DynamicTotalLabel.Text.IndexOf('$'));
+            //try
+            //{
+                if (coffeeOrdered != null)
+                {
+                    ohfm.AddOrder(new IOModels.OrderModel
+                    {
+                        Coffee = coffeeOrdered,
+                        Price = getTotal(),
+                        Date = DateTime.Now,
+                        CustomerName = "Dude"
+                    });
+                }
+            //}
+            //catch (Exception ex)
+            //{
+            //    var i = 0;
+            //}
+            bool writeSuccess = ohfm.WriteReport("report.txt");
 
 
         }
