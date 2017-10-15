@@ -13,6 +13,9 @@ namespace CoffeeSim
 {
     public partial class MenuController : Form
     {
+		public ManagerLoginForm frmLogin;
+		public ManagerControlForm frmControl;
+
         private CoffeeModel coffeeOrdered;
         private List<CoffeeModel> coffeesList;
         private List<ToppingModel> toppingList;
@@ -20,6 +23,7 @@ namespace CoffeeSim
 
         //OrderHistory
         private OrderHistoryFileManager ohfm;
+        public string FilePath = Environment.CurrentDirectory;
 
         public MenuController(OrderHistoryFileManager pOHFM)
         {
@@ -88,7 +92,14 @@ namespace CoffeeSim
 
         private void LogInButton_Click(object sender, EventArgs e)
         {
-            Console.WriteLine("Manager wants to log in");
+			//open manager login form
+			if (frmLogin == null && frmControl == null) {
+				frmLogin = new ManagerLoginForm(this);
+				frmLogin.Show();
+				Console.WriteLine("Manager wants to log in");
+			} else {
+				Console.WriteLine("Login Screen is open");
+			}
         }
 
         private void CoffeesDropBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -224,6 +235,11 @@ namespace CoffeeSim
 
             DynamicTotalLabel.Text = getTotal().ToString("C");
         }
+
+		private void OnMenuChanged(object seender, EventArgs e) {
+			GetListOfCoffees();
+			GetListOfToppings();
+		}
 
     }
 }
