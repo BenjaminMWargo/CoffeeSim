@@ -13,95 +13,78 @@ namespace CoffeeSim
     public class OrderHistoryFileManager
     {
         private static OrderHistoryFileManager orderHistory;
-        private static OrderFileModel OrderFile;
-        private static string OrderFilePath;
+        private string OrderFilePath;
 
-        private OrderHistoryFileManager(string pathName)
+        private OrderHistoryFileManager()
         {
-            //touch a file here?
-            if (!File.Exists(pathName))
-            {
-                File.Create(pathName); //this doesn't actually do anything...
-                OrderFile = ReadFile(pathName);
-            }
-            else{
-                OrderFile = ReadFile(pathName);
-            }
+            OrderFilePath = "OrderHistory.json";
 
-            if (OrderFile == null){
-                OrderFile = new OrderFileModel
-                {
-                    Orders = new List<OrderModel>()
-                };
+            //touch a file here?
+            if (!File.Exists(OrderFilePath))
+            {
+                File.Create(OrderFilePath); //this doesn't actually do anything...
             }
         }
 
         public static OrderHistoryFileManager GetInstance(string pathName)
         {
-            if(orderHistory == null)
+            if (orderHistory == null)
             {
-                orderHistory = new OrderHistoryFileManager(pathName);
-                OrderFilePath = pathName;
-                return orderHistory;
+                orderHistory = new OrderHistoryFileManager();
             }
-            else
-            {
-                return orderHistory;
-            }
+
+            return orderHistory;
         }
 
 
-        private void WriteFile(string filePath, OrderFileModel orderFile)
+        private void WriteFile(List<OrderModel> orderFile)
         {
-            if (!File.Exists(filePath))
+            string fileContents = JsonConvert.SerializeObject(orderFile);
+            using (StreamWriter sw = new StreamWriter(OrderFilePath, false)) //do not append, everything is stored in the order file object
             {
-                throw new FileNotFoundException("Order history file not found!");
-            }
-            else
-            {
-                string fileContents = JsonConvert.SerializeObject(orderFile);
-                using (StreamWriter sw = new StreamWriter(filePath)) //do not append, everything is stored in the order file object
-                {
-                    sw.Write(fileContents);
-                }
+                sw.Write(fileContents);
             }
         }
 
-        private OrderFileModel ReadFile(string filePath)
+        public List<OrderModel> GetOrderHistory()
         {
-            //check to see if the file is here
-            if (!File.Exists(filePath))
-            {
-                throw new FileNotFoundException("Order history file not found!");
-            }
-            else
-            {
-                string fileContents;
-                using (StreamReader sr = new StreamReader(filePath))
+            string fileContents;
+
+                using (StreamReader sr = new StreamReader(OrderFilePath))
                 {
                     fileContents = sr.ReadToEnd();
                 }
-                OrderFileModel orderFile = JsonConvert.DeserializeObject<OrderFileModel>(fileContents);
+       
 
-                return orderFile;
+            List<OrderModel> orderFile = JsonConvert.DeserializeObject<List<OrderModel>>(fileContents);
+
+            if (orderFile == null){
+                orderFile = new List<OrderModel>();
             }
+            return orderFile;
         }
 
         public void AddOrder(OrderModel order)
         {
             //add to memory list
-            OrderFile.Orders.Add(order);
+            List<OrderModel> OrderFile = GetOrderHistory();
+
+            if (order != null)
+            {
+                OrderFile.Add(order);
+            }
 
             //write that out
-            WriteFile(OrderFilePath, OrderFile);
+            WriteFile(OrderFile);
         }
 
-        public bool WriteReport(string pathName)
+
+        public bool WriteReport(List<OrderModel> OrderFile, string pathName)
         {
             using (StreamWriter sw = new StreamWriter(pathName, false))
             {
                 //constitute line by line
-                foreach(var order in OrderFile.Orders)
+                foreach (var order in OrderFile)
                 {
                     StringBuilder sb = new StringBuilder();
                     sb.Append(order.Date.ToString("mm/dd/yyyy"));
@@ -121,7 +104,8 @@ namespace CoffeeSim
 
 
                     //Todo: Fix case where toppings can be stored as null (should be stored as an empty list) Check JsonConvert [could be culprit]
-                    if (order.Coffee.Toppings != null){
+                    if (order.Coffee.Toppings != null)
+                    {
                         foreach (var topping in order.Coffee.Toppings)
                         {
                             sb.Append(topping.Name);
@@ -129,9 +113,10 @@ namespace CoffeeSim
                             sb.Append(topping.Price.ToString("C"));
                             sb.Append("]");
                             sb.Append(" ");
-                        }                       
+                        }
                     }
-                    else{
+                    else
+                    {
                         sb.Append("no toppings/null toppings");
                     }
 
@@ -152,8 +137,5 @@ namespace CoffeeSim
                 return false;
             }
         }
-
-
-
     }
 }

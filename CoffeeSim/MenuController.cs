@@ -157,7 +157,7 @@ namespace CoffeeSim
         private void CheckoutButton_Click(object sender, EventArgs e)
         {
             Console.WriteLine("Console Checkout");
-                
+               
             if (coffeeOrdered != null)
             {
                 ohfm.AddOrder(new IOModels.OrderModel
@@ -167,6 +167,16 @@ namespace CoffeeSim
                     Date = DateTime.Now,
                     CustomerName = "Dude"
                 });
+            }
+
+            // FOR TESTING
+            List<OrderModel> orderHistory = ohfm.GetOrderHistory();
+
+            ohfm.WriteReport(orderHistory, "HistoryReport.txt");
+
+            foreach(OrderModel currentOrder in orderHistory)
+            {
+                Console.WriteLine(currentOrder.Coffee.Name);
             }
         }
 
@@ -207,7 +217,7 @@ namespace CoffeeSim
             else // Selection is topping
             {
                 Console.WriteLine("Here");
-                OrderListBox.SelectedItem = null;    // HACKY WAY OF INTERRUPTING RECURSIVE FIRES OF SELECTED INDEX CHANGE
+                OrderListBox.SelectedItem = null;   
                 OrderListBox.Items.RemoveAt(selectedIndex);
                 coffeeOrdered.Toppings.RemoveAt(selectedIndex - 1);
             }

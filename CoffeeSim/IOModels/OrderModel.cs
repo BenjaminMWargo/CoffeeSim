@@ -13,9 +13,4 @@ namespace CoffeeSim.IOModels
         public Decimal Price { get; set; }
         public CoffeeModel Coffee { get; set; }
     }
-
-    public class OrderFileModel
-    {
-        public List<OrderModel> Orders { get; set; }
-    }
 }
