@@ -21,6 +21,8 @@ namespace CoffeeSim
         private List<ToppingModel> toppingList;
         private bool ViewFullyLoaded;
 
+		public string FilePath = Environment.CurrentDirectory;
+
         public MenuController()
         {
             ViewFullyLoaded = false;
@@ -210,6 +212,11 @@ namespace CoffeeSim
 
             DynamicTotalLabel.Text = getTotal().ToString("C");
         }
+
+		private void OnMenuChanged(object seender, EventArgs e) {
+			GetListOfCoffees();
+			GetListOfToppings();
+		}
 
     }
 }

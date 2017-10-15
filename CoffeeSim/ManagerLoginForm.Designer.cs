@@ -54,8 +54,7 @@
 			this.btn_Login.TabIndex = 2;
 			this.btn_Login.Text = "Login";
 			this.btn_Login.UseVisualStyleBackColor = true;
-			this.btn_Login.Click += new System.EventHandler(this.btn_Login_Click);
-			// 
+			this.btn_Login.Click += new System.EventHandler(this.btn_Login_Click); 
 			// btn_Cancel
 			// 
 			this.btn_Cancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
