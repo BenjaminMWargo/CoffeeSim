@@ -169,6 +169,16 @@ namespace CoffeeSim
         {
             Console.WriteLine("Console Checkout");
                
+            if(coffeeOrdered == null)
+            {
+                MessageBox.Show("Please select a coffee");
+            }
+            else if(CustomerTextField.Text.Trim() == "")
+            {
+                MessageBox.Show("Please enter a customer name");
+                return;
+            }
+
             if (coffeeOrdered != null)
             {
                 ohfm.AddOrder(new IOModels.OrderModel
@@ -176,7 +186,7 @@ namespace CoffeeSim
                     Coffee = coffeeOrdered,
                     Price = getTotal(),
                     Date = DateTime.Now,
-                    CustomerName = "Dude"
+                    CustomerName = CustomerTextField.Text
                 });
             }
 
