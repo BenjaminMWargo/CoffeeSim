@@ -16,8 +16,7 @@ namespace CoffeeSim
         {
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-            OrderHistoryFileManager ohfm = OrderHistoryFileManager.GetInstance("orderhistory.json");
-			Application.Run(new MenuController(ohfm));
+            Application.Run(new MenuController());
 		}
 	}
 }

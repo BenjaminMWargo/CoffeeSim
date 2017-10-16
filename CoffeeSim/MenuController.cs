@@ -21,15 +21,18 @@ namespace CoffeeSim
         private List<ToppingModel> toppingList;
         private bool ViewFullyLoaded;
 
-        //OrderHistory
+        // File Managers
         private OrderHistoryFileManager ohfm;
-        public string FilePath = Environment.CurrentDirectory;
+        private CoffeeFileManager cfm;
+        private ToppingsFileManager tfm;
 
-        public MenuController(OrderHistoryFileManager pOHFM)
+        public MenuController()
         {
             ViewFullyLoaded = false;
             InitializeComponent();
-            ohfm = pOHFM;
+            ohfm = OrderHistoryFileManager.GetInstance();
+            cfm = CoffeeFileManager.GetInstance();
+            tfm = ToppingsFileManager.GetInstance();
         }
 
         // For when the Menu UI is loaded
@@ -39,8 +42,6 @@ namespace CoffeeSim
             GetListOfCoffees();
             GetListOfToppings();
 
-            
-
             ViewFullyLoaded = true;
         }
 
@@ -49,18 +50,14 @@ namespace CoffeeSim
         // A drop down menu for selecting the desired coffee
         private void GetListOfCoffees()
         {
-            coffeesList = new List<CoffeeModel>();  // Will instead call ReadData from CoffeesFileManager
+            coffeesList = cfm.ReadData();  // Will instead call ReadData from CoffeesFileManager
+
             List<string> coffeesListDisplay = new List<string>();
             coffeesListDisplay.Add("- Select a coffee -");
 
-            // Just for testing without coffee file manager
-            coffeesList.Add(new CoffeeModel("Regular", Decimal.Parse("2.50")));
-            coffeesList.Add(new CoffeeModel("Decaf", Decimal.Parse("3.00")));
-            coffeesList.Add(new CoffeeModel("House Blend", Decimal.Parse("3.25")));
-
             for (int i = 0; i < coffeesList.Count; i++)
             {
-                coffeesListDisplay.Add(coffeesList[i].Name + " - " + coffeesList[i].Price);
+                coffeesListDisplay.Add(coffeesList[i].GetDescription());
             }
 
             CoffeesDropBox.DataSource = coffeesListDisplay;
@@ -71,19 +68,12 @@ namespace CoffeeSim
         {
             this.ToppingsListBox.SelectedIndexChanged -= new EventHandler(ToppingsListBox_SelectedIndexChanged);
             List<string> toppingListDisplay = new List<string>();
-            toppingList = new List<ToppingModel>(); // Will instead call ReadData from ToppingsFileManager
-
-            // Just for testing without toppings file manager
-            toppingList.Add(new ToppingModel("Mocha", Decimal.Parse("0.50")));
-            toppingList.Add(new ToppingModel("Milk", Decimal.Parse("0.70")));
-            toppingList.Add(new ToppingModel("Water", Decimal.Parse("0.00")));
-
+            toppingList = tfm.ReadData();
 
             for (int i = 0; i < toppingList.Count; i++)
             {
-                toppingListDisplay.Add(toppingList[i].Name + " - " + toppingList[i].Price);
+                toppingListDisplay.Add(toppingList[i].GetDescription());
             }
-
 
             // Toppings list properties
             ToppingsListBox.DataSource = toppingListDisplay;
@@ -130,8 +120,12 @@ namespace CoffeeSim
 
                 OrderListBox.Items.Insert(0, CoffeesDropBox.SelectedItem);  // Add the selected coffee to the orders list
 
-                coffeeOrdered = coffeesList[CoffeesDropBox.SelectedIndex - 1];
-                coffeeOrdered.Toppings = temp;
+                coffeeOrdered = (CoffeeModel)coffeesList[CoffeesDropBox.SelectedIndex - 1];
+
+                if (coffeeOrdered.GetType() == typeof(CoffeeModel))
+                {
+                    coffeeOrdered.Toppings = temp;
+                }
             }
 
             DynamicTotalLabel.Text = getTotal().ToString("C");
@@ -156,7 +150,7 @@ namespace CoffeeSim
                     coffeeOrdered.Toppings = new List<ToppingModel>();
                 }
 
-                coffeeOrdered.Toppings.Add(toppingList[ToppingsListBox.SelectedIndex]);
+                coffeeOrdered.Toppings.Add((ToppingModel)toppingList[ToppingsListBox.SelectedIndex]);
 
                 foreach (ToppingModel topping in coffeeOrdered.Toppings)
                 {

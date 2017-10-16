@@ -16,5 +16,10 @@ namespace CoffeeSim.IOModels
             Name = name;
             Price = price;
         }
+
+        public string GetDescription() 
+        {
+            return this.Name + " - " + this.Price;
+        }
     }
 }

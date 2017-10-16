@@ -26,7 +26,7 @@ namespace CoffeeSim
             }
         }
 
-        public static OrderHistoryFileManager GetInstance(string pathName)
+        public static OrderHistoryFileManager GetInstance()
         {
             if (orderHistory == null)
             {
