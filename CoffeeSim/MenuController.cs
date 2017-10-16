@@ -39,6 +39,8 @@ namespace CoffeeSim
             GetListOfCoffees();
             GetListOfToppings();
 
+            
+
             ViewFullyLoaded = true;
         }
 
@@ -67,6 +69,7 @@ namespace CoffeeSim
         // A list of toppings for the user to choose from
         private void GetListOfToppings()
         {
+            this.ToppingsListBox.SelectedIndexChanged -= new EventHandler(ToppingsListBox_SelectedIndexChanged);
             List<string> toppingListDisplay = new List<string>();
             toppingList = new List<ToppingModel>(); // Will instead call ReadData from ToppingsFileManager
 
@@ -84,6 +87,7 @@ namespace CoffeeSim
 
             // Toppings list properties
             ToppingsListBox.DataSource = toppingListDisplay;
+            this.ToppingsListBox.SelectedIndexChanged += new EventHandler(ToppingsListBox_SelectedIndexChanged);
         }
 
         #endregion
@@ -94,7 +98,7 @@ namespace CoffeeSim
         {
 			//open manager login form
 			if (frmLogin == null && frmControl == null) {
-				frmLogin = new ManagerLoginForm(this);
+				frmLogin = new ManagerLoginForm(this, ohfm);
 				frmLogin.Show();
 				Console.WriteLine("Manager wants to log in");
 			} else {
@@ -179,16 +183,6 @@ namespace CoffeeSim
                     CustomerName = "Dude"
                 });
             }
-
-            // FOR TESTING
-            List<OrderModel> orderHistory = ohfm.GetOrderHistory();
-
-            ohfm.WriteReport(orderHistory, "HistoryReport.txt");
-
-            foreach(OrderModel currentOrder in orderHistory)
-            {
-                Console.WriteLine(currentOrder.Coffee.Name);
-            }
         }
 
         private Decimal getTotal()
@@ -239,7 +233,14 @@ namespace CoffeeSim
 		private void OnMenuChanged(object seender, EventArgs e) {
 			GetListOfCoffees();
 			GetListOfToppings();
+            Console.Write("hey");
 		}
+
+        public void SubscribeManagerEvents(ManagerControlForm frm)
+        {
+            frmControl = frm;
+            frmControl.RegisterEvent(OnMenuChanged);
+        }
 
     }
 }

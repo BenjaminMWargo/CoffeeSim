@@ -87,7 +87,7 @@ namespace CoffeeSim
                 foreach (var order in OrderFile)
                 {
                     StringBuilder sb = new StringBuilder();
-                    sb.Append(order.Date.ToString("mm/dd/yyyy"));
+                    sb.Append(order.Date.ToString("MM/dd/yyyy"));
                     sb.Append(" ");
 
                     sb.Append(order.Price.ToString("C"));

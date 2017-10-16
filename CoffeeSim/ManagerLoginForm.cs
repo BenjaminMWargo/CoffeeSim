@@ -12,10 +12,12 @@ namespace CoffeeSim {
 	public partial class ManagerLoginForm : Form {
 
 		MenuController mainForm;
+        OrderHistoryFileManager ohfm;
 
-		public ManagerLoginForm(MenuController mainMenuForm) {
+		public ManagerLoginForm(MenuController mainMenuForm, OrderHistoryFileManager pOHFM) {
 			InitializeComponent();
 			mainForm = mainMenuForm;
+            ohfm = pOHFM;
 		}
 
 		bool ValidateLogin(string username, string password) {
@@ -39,7 +41,7 @@ namespace CoffeeSim {
 				Console.WriteLine("Manager Logged in");
 				//open manager control window
 				if (mainForm.frmControl == null) {
-					mainForm.frmControl = new ManagerControlForm(mainForm);
+					mainForm.frmControl = new ManagerControlForm(mainForm, ohfm);
 					mainForm.frmControl.Show();
 					this.Close();
 					mainForm.frmLogin = null;

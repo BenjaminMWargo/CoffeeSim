@@ -14,6 +14,7 @@ namespace CoffeeSim {
 
 		List<CoffeeModel> CoffeeList;
 		List<ToppingModel> ToppingList;
+        OrderHistoryFileManager ohfm;
 
 		//on form load
 		private void ManagerControlForm_Load(object sender, EventArgs e) {
@@ -21,6 +22,7 @@ namespace CoffeeSim {
 			ToppingList = new List<ToppingModel>();
 			RegisterEvent(MenuHasChanged);
 			OnMenuChanged(this, EventArgs.Empty);
+            
 		}
 
 		public delegate void MenuChangeEvent(object sender, EventArgs e);
@@ -71,18 +73,25 @@ namespace CoffeeSim {
 			//add topping to list
 			ToppingModel tf = new ToppingModel(name, price);
 			ToppingList.Add(tf);
+            //write topping list here
+
+            //write topping list here
 			OnMenuChanged?.Invoke(this, EventArgs.Empty);
 		}
 
 		void RemoveTopping(ToppingModel topping) {
 			//remove topping from list
 			ToppingList.Remove(topping);
+            //write topping list here
+
+            //write topping list here
 			OnMenuChanged?.Invoke(this, EventArgs.Empty);
 		}
 
 		void GenerateReport() {
-			//generate report
-			throw new Exception("Do report stuff");
+            //generate report
+            List<OrderModel> orderHistory = ohfm.GetOrderHistory();
+            ohfm.WriteReport(orderHistory, "OrderReport.txt");
 		}
 
 		void LoadNewFile() {
@@ -95,10 +104,12 @@ namespace CoffeeSim {
 			OnMenuChanged += e;
 		}
 
-		public ManagerControlForm(MenuController mainMenuController) {
+		public ManagerControlForm(MenuController mainMenuController, OrderHistoryFileManager pOHFM) {
 			InitializeComponent();
 			mainMenu = mainMenuController;
-		}
+            ohfm = pOHFM;
+            mainMenu.SubscribeManagerEvents(this);
+        }
 
 		private void btn_Close_Click(object sender, EventArgs e) {
 			this.Close();
@@ -154,5 +165,22 @@ namespace CoffeeSim {
 				RemoveTopping(ToppingList[index]);
 			}
 		}
-	}
+
+        private void btn_Report_Click(object sender, EventArgs e)
+        {
+            GenerateReport();
+        }
+
+
+        //Calls to FileManagers
+        private void btn_OpenFileToppings_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btn_LoadFile_Click(object sender, EventArgs e)
+        {
+
+        }
+    }
 }
