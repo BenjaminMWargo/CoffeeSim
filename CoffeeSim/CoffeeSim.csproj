@@ -105,8 +105,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="IOModels\CoffeeFileManager.cs" />
-    <Compile Include="IOModels\ToppingsFileManager.cs" />
+    <Compile Include="CoffeeFileManager.cs" />
+    <Compile Include="ToppingsFileManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-namespace CoffeeSim.IOModels
+using CoffeeSim.IOModels;
+
+namespace CoffeeSim
 {
     public class ToppingsFileManager : BaseFileManager
     {

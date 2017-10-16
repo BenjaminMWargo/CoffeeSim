@@ -103,7 +103,6 @@ namespace CoffeeSim
                     sb.Append(" ");
 
 
-                    //Todo: Fix case where toppings can be stored as null (should be stored as an empty list) Check JsonConvert [could be culprit]
                     if (order.Coffee.Toppings != null)
                     {
                         foreach (var topping in order.Coffee.Toppings)
@@ -125,8 +124,6 @@ namespace CoffeeSim
                     sw.WriteLine(reportLine);
                 }
             }
-
-            Console.WriteLine("hoy");
 
             if (File.Exists(pathName))
             {

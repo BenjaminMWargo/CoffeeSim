@@ -1,8 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
+using CoffeeSim.IOModels;
 
-namespace CoffeeSim.IOModels
+namespace CoffeeSim
 {
     public class CoffeeFileManager : BaseFileManager
     {

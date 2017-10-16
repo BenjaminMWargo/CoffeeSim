@@ -15,14 +15,15 @@ namespace CoffeeSim {
 		List<CoffeeModel> CoffeeList;
 		List<ToppingModel> ToppingList;
         OrderHistoryFileManager ohfm;
+        ToppingsFileManager tfm;
+        CoffeeFileManager cfm;
 
 		//on form load
 		private void ManagerControlForm_Load(object sender, EventArgs e) {
-			CoffeeList = new List<CoffeeModel>();
-			ToppingList = new List<ToppingModel>();
+			CoffeeList = cfm.ReadData();
+			ToppingList = tfm.ReadData();
 			RegisterEvent(MenuHasChanged);
 			OnMenuChanged(this, EventArgs.Empty);
-            
 		}
 
 		public delegate void MenuChangeEvent(object sender, EventArgs e);
@@ -59,23 +60,40 @@ namespace CoffeeSim {
 		void AddCoffee(string name, decimal price) {
 			//add coffee to list
 			CoffeeModel cf = new CoffeeModel(name, price);
-			CoffeeList.Add(cf);
-			OnMenuChanged?.Invoke(this, EventArgs.Empty);
+            bool success = cfm.Add(cf);
+            if (!success)
+            {
+                MessageBox.Show("Duplicate object entered, please choose a different name.", "Warning");
+                return;
+            }
+            CoffeeList.Add(cf);
+
+
+            OnMenuChanged?.Invoke(this, EventArgs.Empty);
 		}
 
 		void RemoveCoffee(CoffeeModel coffee) {
 			//remove coffee from list
 			CoffeeList.Remove(coffee);
+            cfm.Delete(coffee.Name);
 			OnMenuChanged?.Invoke(this, EventArgs.Empty);
 		}
 
 		void AddTopping(string name, decimal price) {
 			//add topping to list
 			ToppingModel tf = new ToppingModel(name, price);
-			ToppingList.Add(tf);
-            //write topping list here
 
-            //write topping list here
+            bool success = tfm.Add(tf);
+
+            if (!success)
+            {
+                MessageBox.Show("Duplicate object entered, please choose a different name.", "Warning");
+                return;
+            }
+
+            ToppingList.Add(tf);
+
+
 			OnMenuChanged?.Invoke(this, EventArgs.Empty);
 		}
 
@@ -83,7 +101,7 @@ namespace CoffeeSim {
 			//remove topping from list
 			ToppingList.Remove(topping);
             //write topping list here
-
+            tfm.Delete(topping.Name);
             //write topping list here
 			OnMenuChanged?.Invoke(this, EventArgs.Empty);
 		}
@@ -91,13 +109,13 @@ namespace CoffeeSim {
 		void GenerateReport() {
             //generate report
             List<OrderModel> orderHistory = ohfm.GetOrderHistory();
-            ohfm.WriteReport(orderHistory, "OrderReport.txt");
+            bool success = ohfm.WriteReport(orderHistory, "OrderReport.txt");
+            if (success)
+            {
+                System.Diagnostics.Process.Start("OrderReport.txt");
+            }
 		}
 
-		void LoadNewFile() {
-			//open file browser
-			throw new Exception("Do File stuff");
-		}
 		#endregion
 
 		public void RegisterEvent(MenuChangeEvent e){
@@ -109,6 +127,9 @@ namespace CoffeeSim {
 			mainMenu = mainMenuController;
             ohfm = pOHFM;
             mainMenu.SubscribeManagerEvents(this);
+
+            tfm = ToppingsFileManager.GetInstance();
+            cfm = CoffeeFileManager.GetInstance();
         }
 
 		private void btn_Close_Click(object sender, EventArgs e) {
@@ -150,7 +171,7 @@ namespace CoffeeSim {
 			AddTopping(itemName, itemPrice);
 		}
 
-		private void btn_RemoveCoffee_Click(object sender, EventArgs e) {
+        private void btn_RemoveCoffee_Click(object sender, EventArgs e) {
 			int index = lb_Coffees.SelectedIndex;
 			//get coffee at index
 			if (index != -1) {
@@ -169,18 +190,54 @@ namespace CoffeeSim {
         private void btn_Report_Click(object sender, EventArgs e)
         {
             GenerateReport();
+
         }
 
 
         //Calls to FileManagers
         private void btn_OpenFileToppings_Click(object sender, EventArgs e)
         {
-
+            string newFilePath = FileViewerDialog();
+            if (!String.IsNullOrEmpty(newFilePath))
+            {
+                //then overwrite the file
+                tfm.OverwriteFile(newFilePath);
+            }
+            RefreshDisplayLists();
         }
 
+        //Legacy name:  This is the CoffeeManagerLoadFile
         private void btn_LoadFile_Click(object sender, EventArgs e)
         {
+            string newFilePath = FileViewerDialog();
+            if (!String.IsNullOrEmpty(newFilePath))
+            {
+                //then overwrite the file
+                cfm.OverwriteFile(newFilePath);
+            }
+            RefreshDisplayLists();
+        }
 
+        private void RefreshDisplayLists()
+        {
+            CoffeeList = cfm.ReadData();
+            ToppingList = tfm.ReadData();
+
+            OnMenuChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private string FileViewerDialog()
+        {
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.InitialDirectory = Environment.CurrentDirectory;
+            if(fileDialog.ShowDialog() == DialogResult.OK)
+            {
+                return fileDialog.SafeFileName;
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }
