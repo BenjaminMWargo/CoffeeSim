@@ -53,7 +53,16 @@ namespace CoffeeSim
             coffeesList = cfm.ReadData();  // Will instead call ReadData from CoffeesFileManager
 
             List<string> coffeesListDisplay = new List<string>();
-            coffeesListDisplay.Add("- Select a coffee -");
+
+            if (coffeesList.Count == 0)
+            {
+                coffeesListDisplay.Insert(0, "No coffee available");
+            }
+            else
+            {
+                coffeesListDisplay.Remove("No coffee available");
+                coffeesListDisplay.Insert(0, "- Select a coffee -");
+            }
 
             for (int i = 0; i < coffeesList.Count; i++)
             {
@@ -69,6 +78,15 @@ namespace CoffeeSim
             this.ToppingsListBox.SelectedIndexChanged -= new EventHandler(ToppingsListBox_SelectedIndexChanged);
             List<string> toppingListDisplay = new List<string>();
             toppingList = tfm.ReadData();
+
+            if(toppingList.Count == 0)
+            {
+                toppingListDisplay.Add("No toppings available");
+            }
+            else
+            {
+                toppingListDisplay.Remove("No toppings available");
+            }
 
             for (int i = 0; i < toppingList.Count; i++)
             {
@@ -135,10 +153,13 @@ namespace CoffeeSim
 
         private void ToppingsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Console.WriteLine("You selected {0}", ToppingsListBox.SelectedItem.ToString());
-
             if (ViewFullyLoaded)
             {
+                if (ToppingsListBox.SelectedItem.ToString() == "No toppings available") 
+                {
+                    return;
+                }
+
                 if (coffeeOrdered == null)
                 {
                     MessageBox.Show("Please choose a coffee before you select a topping");
@@ -186,6 +207,12 @@ namespace CoffeeSim
                     Date = DateTime.Now,
                     CustomerName = CustomerTextField.Text
                 });
+
+                MessageBox.Show("Checkout successful! Thank you for your order, " + CustomerTextField.Text + "!");
+
+                DynamicTotalLabel.Text = "$0.00";
+                CustomerTextField.Text = "";
+                CoffeesDropBox.SelectedIndex = 0;
             }
         }
 

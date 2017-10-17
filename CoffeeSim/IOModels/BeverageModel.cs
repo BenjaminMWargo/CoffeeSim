@@ -19,7 +19,7 @@ namespace CoffeeSim.IOModels
 
         public string GetDescription() 
         {
-            return this.Name + " - " + this.Price;
+            return this.Name + " - " + this.Price.ToString("C");
         }
     }
 }

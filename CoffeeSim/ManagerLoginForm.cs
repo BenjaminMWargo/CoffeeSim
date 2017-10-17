@@ -18,6 +18,9 @@ namespace CoffeeSim {
 			InitializeComponent();
 			mainForm = mainMenuForm;
             ohfm = pOHFM;
+            // HARD-CODED FOR DEMO
+            txt_UserName.Text = "admin";
+            txt_Password.Text = "password";
 		}
 
 		bool ValidateLogin(string username, string password) {
@@ -48,6 +51,7 @@ namespace CoffeeSim {
 				}
 			} else {
 				Console.WriteLine("Failed Login");
+                MessageBox.Show("Username or password was incorrect");
 			}
 		}
 

@@ -24,6 +24,8 @@ namespace CoffeeSim {
 			ToppingList = tfm.ReadData();
 			RegisterEvent(MenuHasChanged);
 			OnMenuChanged(this, EventArgs.Empty);
+            btn_OpenFileToppings.Text = "Overwrite Toppings";
+            btn_LoadFile.Text = "Overwrite Coffees";
 		}
 
 		public delegate void MenuChangeEvent(object sender, EventArgs e);
@@ -48,12 +50,6 @@ namespace CoffeeSim {
 		void ClearTextBoxes() {
 			txt_ItemName.Clear();
 			txt_ItemPrice.Clear();
-		}
-
-		void SetNewFilePath() {
-			//set new filepath
-			throw new NotImplementedException();
-			OnMenuChanged?.Invoke(this, EventArgs.Empty);
 		}
 
 		#region List Changers
@@ -109,6 +105,13 @@ namespace CoffeeSim {
 		void GenerateReport() {
             //generate report
             List<OrderModel> orderHistory = ohfm.GetOrderHistory();
+
+            if(orderHistory == null || orderHistory.Count == 0)
+            {
+                MessageBox.Show("No order history to show");
+                return;
+            }
+
             bool success = ohfm.WriteReport(orderHistory, "OrderReport.txt");
             if (success)
             {
@@ -169,6 +172,7 @@ namespace CoffeeSim {
 			}
 			//if successful
 			AddTopping(itemName, itemPrice);
+            ClearTextBoxes();
 		}
 
         private void btn_RemoveCoffee_Click(object sender, EventArgs e) {
@@ -190,7 +194,6 @@ namespace CoffeeSim {
         private void btn_Report_Click(object sender, EventArgs e)
         {
             GenerateReport();
-
         }
 
 
