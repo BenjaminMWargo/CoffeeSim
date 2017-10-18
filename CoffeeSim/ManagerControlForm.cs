@@ -235,7 +235,7 @@ namespace CoffeeSim {
             fileDialog.InitialDirectory = Environment.CurrentDirectory;
             if(fileDialog.ShowDialog() == DialogResult.OK)
             {
-                return fileDialog.SafeFileName;
+                return fileDialog.FileName;
             }
             else
             {
