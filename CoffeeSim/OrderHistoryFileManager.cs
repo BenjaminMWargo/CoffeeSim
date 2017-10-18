@@ -116,7 +116,7 @@ namespace CoffeeSim
                     }
                     else
                     {
-                        sb.Append("no toppings/null toppings");
+                        sb.Append("no toppings");
                     }
 
 

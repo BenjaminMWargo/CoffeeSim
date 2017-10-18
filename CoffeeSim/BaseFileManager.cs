@@ -18,7 +18,10 @@ namespace CoffeeSim
         {
             if(!File.Exists(filePathIn))
             {
-                File.Create(filePathIn);
+                using (File.Create(filePathIn))
+                {
+                    //using to close any streams to this file while it's being touched
+                }
             }
 
             filePath = filePathIn;
